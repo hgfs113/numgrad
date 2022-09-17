@@ -90,6 +90,16 @@ class Matrix:
             out._backward = _backward
         return out
 
+    def exp(self):
+        out = Matrix(np.exp(self.data), children=(self, ))
+
+        if self.require_grad:
+            def _backward():
+                self.grad = out * out.grad
+
+            out._backward = _backward
+        return out
+
     def _build_graph(self):
         visited = set()
         nodes = []
@@ -142,19 +152,3 @@ class Matrix:
 
     def __truediv__(self, other):
         return self * other**-1
-
-
-if __name__ == "__main__":
-    X = Matrix(np.random.uniform(size=(10, 4)), require_grad=False)
-    y = Matrix(np.random.uniform(size=(10, 1)), require_grad=False)
-    w = Matrix(np.random.uniform(size=(4, 1)))
-    b = Matrix(np.random.uniform(size=(1)))
-    params = [w, b]
-
-    for i in range(10):
-        loss = ((X.dot(w) + b - y) ** 2).mean(0)
-        print("loss:", loss.data[0])
-        loss.zero_grad()
-        loss.backward()
-        for param in params:
-            param.data -= 0.1 * param.grad
