@@ -41,7 +41,7 @@ if __name__ == "__main__":
                 param.data -= LR * param.grad
 
     print("MSELoss:")
-    test_loss(losses.MSELoss)
+    test_loss(losses.MSELoss, clf=False)
     print()
     print("BCELoss:")
-    test_loss(losses.BCELogitsLoss)
+    test_loss(losses.BCELogitsLoss, clf=True)
