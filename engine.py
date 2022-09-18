@@ -119,7 +119,7 @@ class Matrix:
         for node in nodes:
             node.grad *= 0 # faster than np.zeros?
 
-    def backward(self):
+    def backward(self, ):
         assert self.require_grad
         nodes = self._build_graph()
         self.grad = np.ones_like(self.data)
